@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "note": "Proposed demonstration dataset. Not approved production requirements.",
+  "epics": [
+    {
+      "id": "DEMO-EPIC-001",
+      "type": "Epic",
+      "title": "Automated Documentation Synchronization",
+      "description": "As a software development team, we want to automatically synchronize project documentation with approved requirements and implementation changes so that documentation remains accurate, consistent, and up to date.",
+      "priority": "High",
+      "status": "Proposed",
+      "storyIds": ["DEMO-101", "DEMO-102", "DEMO-103", "DEMO-104", "DEMO-105"],
+      "metadata": { "source": "demo", "labels": ["documentation", "sync"] }
+    }
+  ]
+}

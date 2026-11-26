@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "note": "Proposed demonstration dataset. Not approved production requirements. Add stories here without changing the agent architecture.",
+  "stories": [
+    {
+      "id": "DEMO-101",
+      "type": "Story",
+      "epicId": "DEMO-EPIC-001",
+      "title": "Import and Analyze User Stories",
+      "description": "As a Requirements Analyst, I want to import a user story from a local demonstration source or Jira so that I can analyze its requirements and prepare it for the SDLC pipeline.",
+      "acceptanceCriteria": [
+        "Retrieve a story by its unique ID.",
+        "Extract title, description, acceptance criteria, and metadata.",
+        "Report missing required fields.",
+        "Return a meaningful Not Found result for invalid IDs.",
+        "Support local demo stories without Jira credentials.",
+        "Record the source of the story."
+      ],
+      "priority": "High",
+      "dependencies": [],
+      "status": "Proposed",
+      "metadata": { "source": "demo", "labels": ["ingestion"], "reporter": "demo-user" }
+    },
+    {
+      "id": "DEMO-102",
+      "type": "Story",
+      "epicId": "DEMO-EPIC-001",
+      "title": "Generate Structured Requirements",
+      "description": "As a Requirements Analyst, I want to transform an imported user story into structured functional and non-functional requirements so that development can proceed using an approved specification.",
+      "acceptanceCriteria": [
+        "Identify functional requirements.",
+        "Identify non-functional requirements when supported by the source.",
+        "Preserve acceptance criteria.",
+        "Flag ambiguous requirements.",
+        "Do not silently invent missing information.",
+        "Allow human review and approval.",
+        "Save approved requirements in `requirements.md`."
+      ],
+      "priority": "High",
+      "dependencies": ["DEMO-101"],
+      "status": "Proposed",
+      "metadata": { "source": "demo", "labels": ["requirements"], "reporter": "demo-user" }
+    },
+    {
+      "id": "DEMO-103",
+      "type": "Story",
+      "epicId": "DEMO-EPIC-001",
+      "title": "Analyze Documentation Changes",
+      "description": "As a developer, I want to identify documentation files affected by an approved requirement or implementation change so that only relevant documentation is updated.",
+      "acceptanceCriteria": [
+        "Identify potentially affected documentation files.",
+        "Record the relationship between requirements and documentation.",
+        "Avoid modifying unrelated documentation.",
+        "Report missing documentation.",
+        "Explain why each file was selected.",
+        "Allow review of proposed changes before application."
+      ],
+      "priority": "High",
+      "dependencies": ["DEMO-102"],
+      "status": "Proposed",
+      "metadata": { "source": "demo", "labels": ["analysis"], "reporter": "demo-user" }
+    },
+    {
+      "id": "DEMO-104",
+      "type": "Story",
+      "epicId": "DEMO-EPIC-001",
+      "title": "Synchronize Documentation",
+      "description": "As a developer, I want to synchronize approved documentation changes with the project source so that documentation reflects the current approved implementation.",
+      "acceptanceCriteria": [
+        "Apply only approved changes.",
+        "Preserve existing documentation where possible.",
+        "Detect conflicting or outdated content.",
+        "Generate a change summary.",
+        "Handle missing files and empty documentation.",
+        "Verify synchronization results.",
+        "Trace changes to their originating requirements or stories."
+      ],
+      "priority": "High",
+      "dependencies": ["DEMO-103"],
+      "status": "Proposed",
+      "metadata": { "source": "demo", "labels": ["sync"], "reporter": "demo-user" }
+    },
+    {
+      "id": "DEMO-105",
+      "type": "Story",
+      "epicId": "DEMO-EPIC-001",
+      "title": "Review and Audit Documentation Changes",
+      "description": "As a reviewer, I want to review documentation synchronization results and their supporting evidence so that I can verify correctness before changes are merged.",
+      "acceptanceCriteria": [
+        "Display changed files.",
+        "Provide a summary of changes.",
+        "Trace changes to the originating story and requirements.",
+        "Report failed or incomplete synchronization.",
+        "Allow the reviewer to approve or reject proposed changes.",
+        "Generate an audit record.",
+        "Never merge changes without explicit human approval."
+      ],
+      "priority": "Medium",
+      "dependencies": ["DEMO-104"],
+      "status": "Proposed",
+      "metadata": { "source": "demo", "labels": ["audit", "review"], "reporter": "demo-user" }
+    }
+  ]
+}

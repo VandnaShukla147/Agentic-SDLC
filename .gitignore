@@ -151,6 +151,8 @@ activemq-data/
 
 # Environments
 .env
+.env.*
+!.env.example
 .envrc
 .venv
 env/
@@ -158,6 +160,16 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+
+# Node / project runtime
+node_modules/
+coverage/
+.sdlc/
+*.pem
+*.key
+*.tmp
+.DS_Store
+.github/hooks/*.log
 
 # Conda environments
 conda-meta/
