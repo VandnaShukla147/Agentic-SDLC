@@ -17,7 +17,11 @@ All results below are from real runs on Windows, Node v22.18.0, npm 10.9.11 (202
 | V11 | Human gates | approval needs human, hash invalidation, story binding | `npm test` (`workflow.test.ts`) | PASS | 6 workflow tests |
 | V12 | Agent set consistency | registry == `.github/agents` | `npm test` (`agents.test.ts`) | PASS | 9 agents, only `name/description/tools` fields |
 | V13 | Live Jira get | REQ-F-009 against a real Jira Cloud site | `STORY_SOURCE=jira npm run cli -- stories show SCRUM-6` | PASS | `SCRUM-6 [Story] Import and Analyze User Stories`, `Source: jira`, Priority High, Epic SCRUM-5, 6 acceptance criteria; `SCRUM-99` -> `Error [NOT_FOUND] ... not found in Jira.`; `workflow start SCRUM-6` wrote `.sdlc/inputs/SCRUM-6.md`. Stories SCRUM-5 (epic) and SCRUM-6..10 were created for this test via the Atlassian MCP. Auth-failure and network-failure paths remain mocked-only. |
-| V14 | Hook running inside Copilot | `preToolUse` fires in a real session | manual | BLOCKED (not yet run) | hook logic is unit-tested; start a Copilot session and attempt `git commit` to confirm it is denied |
+| V14 | Hook running inside Copilot | `preToolUse` fires in a real session | agent attempts in this session: `git commit --dry-run`, `workflow approve requirements`, create `.sdlc/probe.txt`, `editJiraIssue SCRUM-9999` | PASS | all four returned `Denied by preToolUse hook: ...` with the guard's reason; probe file was not created. Note: an earlier real `git commit` in the same session (checkpoint) was NOT denied, so the hook was not active in that part of the session; it became active later (likely loaded on a hooks reload). Re-confirm after restarting your Copilot session. |
+| V16 | Atlassian MCP read | MCP can read the Jira story | Atlassian MCP `getJiraIssue SCRUM-6` (from the agent session) | PASS | returned SCRUM-6 "Import and Analyze User Stories" with its acceptance criteria |
+| V17 | MCP write blocked by hook | agents cannot change Jira | `npm test` (`guard.test.ts`) | PASS | `createJiraIssue`, `editJiraIssue`, `transitionJiraIssue`, `executeWrite` denied; `getJiraIssue` allowed |
+| V18 | `.mcp.json` loads in your Copilot client | repo-level MCP config is picked up | manual (MCP: List Servers, authenticate) | BLOCKED (not yet run) | config added; needs your OAuth sign-in to confirm |
+| V19 | Interactive human approval | gate needs a human in a real terminal | human ran `workflow start SCRUM-6`, then `workflow approve requirements` and typed the gate name | PASS | `Gate requirements approved by VandnaShukla.`; `docs/approvals.json` has storyId SCRUM-6 and sha256 `cbef297c...`, equal to a recomputed SHA-256 of `docs/requirements.md`; `workflow status` shows the gate approved; `workflow verify` -> `OK requirements`, exit 0. Caveat: that requirements.md was derived from the DEMO-101 story, not SCRUM-6. |
 | V15 | CI | GitHub Actions | n/a | BLOCKED | no CI workflow added (out of the trimmed scope) |
 
 ## Document quality check
@@ -25,3 +29,7 @@ All results below are from real runs on Windows, Node v22.18.0, npm 10.9.11 (202
 
 ## Remaining risk
 Hook is a guardrail, not a security boundary. Jira path unverified live. Semantic accuracy of documentation is a human judgment.
+
+## Final review (PR Publisher end-to-end test, SCRUM-11)
+Typecheck, lint, 135 tests, build, `npm audit` (0 high), `workflow verify` and `docs check` passed on 2026-11-26. The SCRUM-11 pipeline stages were not run (gates need a human terminal). The verdict below was recorded on the human's explicit approval ("approved") to test the PR Publisher publish path, not by the QA agent.
+Final verdict: APPROVED

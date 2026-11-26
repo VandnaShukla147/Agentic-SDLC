@@ -32,5 +32,10 @@ In Copilot Chat run the stage prompts in order: `/requirements`, `/architecture`
 | `src/`, `tests/` | CLI, story sources, workflow gates, `docs check` |
 | `docs/` | requirements, architecture, design review, impl plan, traceability matrix, code review, verification report, PR description |
 
+## Atlassian MCP (optional, read-only)
+
+`.mcp.json` registers the Atlassian MCP server (`https://mcp.atlassian.com/v2/mcp`, HTTP + OAuth; no secrets in the file) with only three read tools allowed. The Requirements Analyst may use `getJiraIssue` and `searchJiraIssuesUsingJql` for extra context; the story handoff from the CLI stays the source of truth. The hook denies every Jira/Confluence write tool, so agents cannot change Jira.
+To use it: open the repo in VS Code, run **MCP: List Servers** (or `/mcp` in Copilot CLI), start `atlassian` and complete the browser sign-in. The app itself does not need the MCP (it uses the REST token).
+
 ## Rules
-Agents never commit, push, merge or approve gates; the hook enforces this. Secrets only via environment variables. Never merge a PR automatically.
+Agents never approve gates, merge or force-push; the hook enforces this. Override: when the QA and Verification Agent records `Final verdict: APPROVED` in `docs/verification-report.md`, the PR Publisher agent may stage, commit (message and `AI-Assisted-By` trailer say it was made by AI), push the feature branch and raise a PR to `main` titled `[AI] ...` with a comment saying it was raised by AI. It needs `gh auth login` once. Secrets only via environment variables. A human reviews and merges every PR.

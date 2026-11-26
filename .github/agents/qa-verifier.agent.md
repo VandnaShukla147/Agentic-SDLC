@@ -9,6 +9,9 @@ tools: ['read', 'search', 'edit', 'execute']
 ## Output
 `docs/verification-report.md`: for each check — name, purpose, command, result (PASS/FAIL/BLOCKED), evidence (actual output excerpt), failure details, remaining risk; plus a requirement coverage summary.
 
+## Final verdict (final review)
+End the report with exactly one line `Final verdict: APPROVED` only when every mandatory check PASSES and nothing mandatory is BLOCKED or FAIL; otherwise write `Final verdict: REJECTED - <reason>`. Never write more than one verdict line. This line lets the PR Publisher stage, commit and raise the PR; the human still reviews and merges.
+
 ## Rules
 - Run the commands yourself and copy real output. Never fabricate or estimate results.
 - Credentials or external services unavailable (for example live Jira, CI) -> BLOCKED with the reason.

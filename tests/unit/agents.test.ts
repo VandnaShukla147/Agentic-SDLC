@@ -6,6 +6,7 @@ import { AGENTS } from '../../src/agents/registry.js';
 const agentsDir = path.resolve('.github/agents');
 const ALLOWED_KEYS = new Set(['name', 'description', 'tools', 'model']);
 const ALLOWED_TOOLS = new Set(['read', 'search', 'edit', 'execute', 'agent', 'web', 'todo']);
+const READ_ONLY_MCP = /^atlassian\/(getJiraIssue|searchJiraIssuesUsingJql|getAccessibleAtlassianResources)$/;
 
 function frontmatter(text: string): Record<string, string> {
   const match = /^---\r?\n([\s\S]*?)\r?\n---/.exec(text);
@@ -33,7 +34,7 @@ describe('agent registry vs .github/agents', () => {
 
     const tools = (fm['tools'] ?? '').replace(/[[\]'"\s]/g, '').split(',').filter(Boolean);
     expect(tools).toEqual(agent.tools);
-    for (const tool of tools) expect(ALLOWED_TOOLS.has(tool)).toBe(true);
+    for (const tool of tools) expect(ALLOWED_TOOLS.has(tool) || READ_ONLY_MCP.test(tool), tool).toBe(true);
   });
 
   it.each(AGENTS.map((a) => [a.id] as const))('%s documents boundaries and failure behavior', async (id) => {
@@ -55,6 +56,15 @@ describe('agent registry vs .github/agents', () => {
 
   it('only the Implementation Agent and QA agent can edit source/tests via execute+edit among non-documentation roles', () => {
     const withExecute = AGENTS.filter((a) => a.tools.includes('execute')).map((a) => a.id);
-    expect(withExecute).toEqual(['orchestrator', 'implementer', 'qa-verifier', 'documentation']);
+    expect(withExecute).toEqual(['orchestrator', 'implementer', 'qa-verifier', 'documentation', 'pr-publisher']);
+  });
+
+  it('the PR Publisher has no edit tool and the AI label is part of its procedure', async () => {
+    const publisher = AGENTS.find((a) => a.id === 'pr-publisher');
+    expect(publisher?.tools).not.toContain('edit');
+    const text = await readFile(path.join(agentsDir, 'pr-publisher.agent.md'), 'utf8');
+    expect(text).toMatch(/AI-Assisted-By:/);
+    expect(text).toMatch(/gh pr create --base main/);
+    expect(text).toMatch(/gh pr comment/);
   });
 });

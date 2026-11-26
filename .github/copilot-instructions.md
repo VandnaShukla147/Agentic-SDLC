@@ -10,7 +10,7 @@ Agentic SDLC capstone: a deterministic TypeScript CLI that keeps documentation i
 ## Workflow and approvals
 Stages are fixed: requirements → architecture → design review → implementation plan → implementation → code review → verification → doc sync → pull request. Check state with `npm run cli -- workflow status`.
 - Humans approve gates (requirements, architecture, plan, doc-changes, pr). Never approve, reject or skip a gate yourself, and never edit `.sdlc/**` or `docs/approvals.json`.
-- Do not run `git commit`, `git push`, `git merge` or `gh pr create/merge`; ask the human.
+- Do not run `git commit`, `git push`, `git merge` or `gh pr create/merge`; ask the human. Override: only the PR Publisher agent may stage, commit, push a feature branch and raise a PR to `main`, and only once `docs/verification-report.md` has `Final verdict: APPROVED` from the QA and Verification Agent. Its commits say they were made by AI, and the PR says it was raised by AI. Merge, rebase, hard reset and force push stay human-only.
 - Ask before adding dependencies, external integrations or changing scope. Do not invent requirements; record assumptions and ask.
 
 ## Coding standards

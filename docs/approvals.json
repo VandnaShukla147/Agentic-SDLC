@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "approvals": [
+    {
+      "gate": "requirements",
+      "storyId": "SCRUM-6",
+      "artifacts": [
+        {
+          "path": "docs/requirements.md",
+          "sha256": "cbef297c95fad00a4d63eb7fc97a13d83dbacd7608698ba339d2bd23e0b6a60b"
+        }
+      ],
+      "approver": "VandnaShukla",
+      "timestamp": "2026-11-26T11:31:03.147Z"
+    }
+  ]
+}

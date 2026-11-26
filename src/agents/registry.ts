@@ -26,7 +26,7 @@ export const AGENTS: readonly AgentSpec[] = [
     purpose: 'Turns the selected story into structured requirements and clarification questions.',
     inputs: ['.sdlc/inputs/<ID>.md'],
     outputs: ['docs/requirements.md'],
-    tools: ['read', 'search', 'edit'],
+    tools: ['read', 'search', 'edit', 'atlassian/getJiraIssue', 'atlassian/searchJiraIssuesUsingJql'],
     gate: 'requirements',
   },
   {
@@ -87,5 +87,13 @@ export const AGENTS: readonly AgentSpec[] = [
     outputs: ['README.md', 'CHANGELOG.md', 'docs/traceability-matrix.md'],
     tools: ['read', 'search', 'edit', 'execute'],
     gate: 'doc-changes',
+  },
+  {
+    id: 'pr-publisher',
+    name: 'PR Publisher',
+    purpose: 'After the pr gate is approved, stages, commits (AI-labelled), pushes the feature branch and opens a PR to main with an AI-authorship comment. Never merges.',
+    inputs: ['approved pr gate', 'docs/pr-description.md', 'docs/verification-report.md'],
+    outputs: ['git commit', 'pushed feature branch', 'pull request to main'],
+    tools: ['read', 'search', 'execute'],
   },
 ];
